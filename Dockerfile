@@ -1,16 +1,15 @@
 FROM ruby:2.3-slim
-# Instala nossas dependencias
-RUN apt-get update && apt-get install -qq -y --no-install-recommends \
-      build-essential nodejs libpq-dev imagemagick libmagickwand-dev
-# Seta nosso path
-ENV INSTALL_PATH /petadmin
-# Cria nosso diretório
-RUN mkdir -p $INSTALL_PATH
-# Seta o nosso path como o diretório principal
-WORKDIR $INSTALL_PATH
-# Copia o nosso Gemfile para dentro do container
-COPY Gemfile ./
-# Seta o path para as Gems
-ENV BUNDLE_PATH /box
-# Copia nosso código para dentro do container
+
+RUN apt-get update -qq && apt-get install -y build-essential libpq-dev postgresql-client nodejs imagemagick libmagickwand-dev
+
+ENV RAILS_ROOT /usr/app
+RUN mkdir -p $RAILS_ROOT/tmp/pids
+WORKDIR $RAILS_ROOT
+
+COPY Gemfile Gemfile
+COPY Gemfile.lock Gemfile.lock
+ENV BUNDLE_PATH /gems
+RUN gem install bundler
+RUN bundle install
+
 COPY . .
