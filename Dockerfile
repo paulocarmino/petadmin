@@ -10,6 +10,6 @@ COPY Gemfile Gemfile
 COPY Gemfile.lock Gemfile.lock
 ENV BUNDLE_PATH /gems
 RUN gem install bundler
-RUN bundle install
+#RUN bundle install
 
 COPY . .
